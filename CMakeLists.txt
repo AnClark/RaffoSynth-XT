@@ -23,18 +23,43 @@ project(RaffoSynth
     LANGUAGES C CXX
 )
 
+option(CONFIG_ASM_IMPLEMENTATION "Enable ASM implementaton of synth engine (Intel SIMD enabled)" OFF)
+
+if(CONFIG_ASM_IMPLEMENTATION)
+    message(STATUS "Use optimized ASM synth engine implementation (Intel SIMD enabled)")
+
+    enable_language(ASM_NASM)
+    set(CMAKE_ASM_NASM_SOURCE_FILE_EXTENSIONS asm)
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(CMAKE_ASM_NASM_FLAGS "${ASM_NASM_FLAGS} -g")
+    else()
+        set(CMAKE_ASM_NASM_FLAGS "${ASM_NASM_FLAGS}")
+    endif()
+else()
+    message(STATUS "Use standard synth engine implementation")
+endif()
+
 add_subdirectory(dpf)
 
 include_directories(src)
 
-add_library(${PROJECT_NAME}-core STATIC
-    src/oscillators.c
-    src/equalizer.c
-    src/fft.h
-    src/tiempo.h
-)
+if(CONFIG_ASM_IMPLEMENTATION)
+    add_library(${PROJECT_NAME}-core STATIC
+        src/oscillators.asm
+        src/equalizer.asm
+        src/fft.h
+        src/tiempo.h
+    )
+else()
+    add_library(${PROJECT_NAME}-core STATIC
+        src/oscillators.c
+        src/equalizer.c
+        src/fft.h
+        src/tiempo.h
+    )
 
-target_compile_options(${PROJECT_NAME}-core PRIVATE -fPIC)
+    target_compile_options(${PROJECT_NAME}-core PRIVATE -fPIC)
+endif()
 
 dpf_add_plugin(${PROJECT_NAME}
     TARGETS vst2 vst3 lv2 clap
