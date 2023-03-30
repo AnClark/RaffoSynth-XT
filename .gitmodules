@@ -1,0 +1,6 @@
+[submodule "src"]
+	path = src
+	url = https://github.com/nicoroulet/RaffoSynth.git
+[submodule "dpf"]
+	path = dpf
+	url = https://github.com/DISTRHO/DPF.git
