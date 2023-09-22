@@ -39,25 +39,40 @@ else()
     message(STATUS "Use standard synth engine implementation")
 endif()
 
+set (SRC_OSCILLATORS src/oscillators.c)
+set (SRC_EQUALIZER src/equalizer.c)
+
+if (CONFIG_ASM_IMPLEMENTATION)
+    option (CONFIG_ASM_IMPL_OSCILLATORS "Use SIMD-optimized ASM oscillator implementation" ON)
+    option (CONFIG_ASM_IMPL_EQUALIZER "Use SIMD-optimized ASM equalizer implementation (NOT recommended)" OFF)
+
+    if (CONFIG_ASM_IMPL_OSCILLATORS)
+        message(STATUS "  - Use SIMD optimized oscillators")
+        set (SRC_OSCILLATORS src/oscillators.asm)
+    else ()
+        message(STATUS "  - Use standard oscillators")
+    endif ()
+
+    if (CONFIG_ASM_IMPL_EQUALIZER)
+        message(STATUS "  - Use SIMD optimized equalizer (NOT recommended!)")
+        set (SRC_EQUALIZER src/equalizer.asm)
+    else ()
+        message(STATUS "  - Use standard equalizer")
+    endif ()
+endif ()
+
 add_subdirectory(dpf)
 
 include_directories(src)
 
-if(CONFIG_ASM_IMPLEMENTATION)
-    add_library(${PROJECT_NAME}-core STATIC
-        src/oscillators.asm
-        src/equalizer.asm
-        src/fft.h
-        src/tiempo.h
-    )
-else()
-    add_library(${PROJECT_NAME}-core STATIC
-        src/oscillators.c
-        src/equalizer.c
-        src/fft.h
-        src/tiempo.h
-    )
+add_library(${PROJECT_NAME}-core STATIC
+    ${SRC_OSCILLATORS}
+    ${SRC_EQUALIZER}
+    src/fft.h
+    src/tiempo.h
+)
 
+if (NOT CONFIG_ASM_IMPLEMENTATION)
     target_compile_options(${PROJECT_NAME}-core PRIVATE -fPIC)
 endif()
 
