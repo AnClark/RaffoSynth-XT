@@ -40,7 +40,7 @@ else()
 endif()
 
 set (SRC_OSCILLATORS src/oscillators.c)
-set (SRC_EQUALIZER src/equalizer.c)
+set (SRC_EQUALIZER plugin/equalizer_v2.c)   # Use our optimized equalizer with bugfix
 
 if (CONFIG_ASM_IMPLEMENTATION)
     option (CONFIG_ASM_IMPL_OSCILLATORS "Use SIMD-optimized ASM oscillator implementation" ON)
