@@ -77,6 +77,8 @@ public:
     void  set_param(ParamId index, float value);
     float get_param(ParamId index);
 
+    void set_samplerate(float new_sample_rate);
+
 protected:
     float  m_parameters[m_n_params];
     float* p(uint32_t paramId);

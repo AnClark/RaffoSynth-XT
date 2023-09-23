@@ -332,3 +332,8 @@ float RaffoSynth::get_param(ParamId index)
 {
     return m_parameters[index];
 }
+
+void RaffoSynth::set_samplerate(float new_sample_rate)
+{
+    sample_rate = new_sample_rate;
+}

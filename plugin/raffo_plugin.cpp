@@ -166,10 +166,7 @@ void RaffoSynthPlugin::sampleRateChanged(double newSampleRate)
         d_stderr("[DSP] Sample rate changed: from %f to %f", fSampleRate, newSampleRate);
 
         fSampleRate = newSampleRate;
-
-        // Reinit synth engine
-        fSynthesizer.reset();
-        fSynthesizer = std::make_unique<RaffoSynth>(fSampleRate);
+        fSynthesizer->set_samplerate(fSampleRate);
     } else {
         d_stderr("[DSP] Sample rate changed: same as current value, %f", fSampleRate);
     }
