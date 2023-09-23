@@ -146,6 +146,9 @@ void RaffoSynthPlugin::run(const float** inputs, float** outputs, uint32_t frame
 // Reinit synth engine on buffer size change.
 void RaffoSynthPlugin::bufferSizeChanged(int newBufferSize)
 {
+    if (fSynthesizer == nullptr)
+        return;
+
     if (fBufferSize != newBufferSize) {
         d_stderr("[DSP] Buffer size changed: from %d to %d", fBufferSize, newBufferSize);
 
@@ -162,6 +165,9 @@ void RaffoSynthPlugin::bufferSizeChanged(int newBufferSize)
 // Reinit synth engine on sample rate change.
 void RaffoSynthPlugin::sampleRateChanged(double newSampleRate)
 {
+    if (fSynthesizer == nullptr)
+        return;
+
     if (fSampleRate != newSampleRate) {
         d_stderr("[DSP] Sample rate changed: from %f to %f", fSampleRate, newSampleRate);
 
