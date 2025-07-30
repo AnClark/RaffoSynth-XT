@@ -27,7 +27,7 @@ git clone https://github.com/AnClark/RaffoSynth-XT.git --recursive
 cd RaffoSynth-XT
 
 # In case you forgot the `--recursive` switch above
-git submodule update --init --recusrive
+git submodule update --init --recursive
 
 # Now let's build!
 cmake -S . -B build
